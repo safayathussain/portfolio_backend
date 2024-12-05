@@ -85,6 +85,20 @@ app.get("/projects", async (req, res) => {
   const projects = await Project.find({});
   res.send(projects);
 });
+app.get("/projects/:id", async (req, res) => {
+  try {
+    const projectId = req.params.id; // Get the project ID from the URL
+    const project = await Project.findOne({ _id: projectId }); // Find the project by its ID
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" }); // Handle case if project is not found
+    }
+    res.status(200).json(project); // Return the found project
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching project", error: error.message }); // Handle error
+  }
+});
 
 app.post(
   "/create-project",
